@@ -7,8 +7,9 @@
     Note:  Optional: you can add that to Environment Variable Path
            Optional:  If there's WebDriverManager jar available in the market, we add to Java library and we don't need this step 3.
 
-2. Export/Import Java Project
+2. Export/Import Java Project  
   2.1 Export the project 
+    - Implement auction round 1 using Java project interface JavaSamplerCilent.  More detail:  https://jmeter.apache.org/api/org/apache/jmeter/protocol/java/sampler/JavaSamplerClient.html
     - Go to Project Structure -> Modules -> Dependencies -> Jar
     - Go to Build Artifact -> click Build
   2.2 Copy the jar file under output directory where you save the Jar file.  Then, add it to Jmeter -> apache-jmeterxx -> lib -> ext folder.
