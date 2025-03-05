@@ -17,4 +17,6 @@
 3. Open Jmeter (If it's currently open, it needs restarting)
   3.1 Create Thread Group
   3.2 Under Thread Group, add JavaRequest
+  3.3 Setup parameter username, password under JavaRequest
+  3.4 Add CSV Data Set Config and set path to excel file where we store usernames, passwords
  
