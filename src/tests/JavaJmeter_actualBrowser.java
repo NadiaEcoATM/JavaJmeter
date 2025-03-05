@@ -3,14 +3,13 @@ import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class JavaJmeter_actualBrowser implements JavaSamplerClient {
     private String username;
     private String password;
+    private WebDriver driver;
     private final String email_field = "//input[contains(@id,'Login_Custom_Web.loginemail')]";
     private final String email_nextButton = "//button[contains(@data-button-id,'Login_Custom_Web.actionButtonNext')]";
     private final String password_field = "//input[contains(@id,'Login_Custom_Web.loginpassword')]";
@@ -42,30 +41,28 @@ public class JavaJmeter_actualBrowser implements JavaSamplerClient {
     public SampleResult runTest(JavaSamplerContext context) {
         SampleResult result = new SampleResult();
         result.sampleStart();
-        WebDriver driver = null;
+        //WebDriver driver = null;
+        driver = null;
         try {
             System.setProperty("webdriver.gecko.driver", "C:\\Users\\nadia.boonnayanont\\Documents\\Jmeter\\geckodriver.exe");
             driver = new FirefoxDriver();
 
-            //Logging In
+        //Logging In
             driver.get("https://buy-qa.ecoatmdirect.com/p/login/web");
             Thread.sleep(3000);
-            driver.findElement(By.xpath(email_field)).sendKeys(username);
-            driver.findElement(By.xpath(email_nextButton)).click();
-            Thread.sleep(2000);
-            driver.findElement(By.xpath(password_field)).sendKeys(password);
-            driver.findElement(By.xpath(login_button)).click();
-            Thread.sleep(3000);
+            sendKey(email_field,username);
+            click(email_nextButton);
+            sendKey(password_field,password);
+            click(login_button);
 
-            //Placing Bids Hand-on Table
+        //Placing Bids Hand-on Table
             for(int i=1; i<7; i++) {
-                driver.findElement(By.xpath(String.format(eachRow_bidPrice,String.valueOf(i)))).click();
-                driver.findElement(By.xpath(String.format(eachRow_bidPrice,String.valueOf(i)))).sendKeys(Keys.CONTROL, "a", Keys.BACK_SPACE);
-                driver.findElement(By.xpath(String.format(eachRow_bidPrice,String.valueOf(i)))).sendKeys(randomBidPrice());
+                click(String.format(eachRow_bidPrice,String.valueOf(i)));
+                sendKey(String.format(eachRow_bidPrice,String.valueOf(i)),"Keys.CONTROL, \"a\", Keys.BACK_SPACE");
+                sendKey(String.format(eachRow_bidPrice,String.valueOf(i)), randomBidPrice());
                 Thread.sleep(2000);
-                driver.findElement(By.xpath(String.format(eachRow_bidQty,String.valueOf(i)))).click();
-                driver.findElement(By.xpath(String.format(eachRow_bidQty,String.valueOf(i)))).sendKeys("1");
-                Thread.sleep(2000);
+                click(String.format(eachRow_bidQty,String.valueOf(i)));
+                sendKey(String.format(eachRow_bidQty,String.valueOf(i)),"1");
             }
 
             //Submitting Bids
@@ -98,5 +95,13 @@ public class JavaJmeter_actualBrowser implements JavaSamplerClient {
     public static String randomBidPrice() {
         double price = 100 + Math.random() * 1000;
         return String.format("%.2f", price);
+    }
+
+    public void click(String xpath) throws InterruptedException {
+        driver.findElement(By.xpath(xpath)).click();
+        Thread.sleep(3000);
+    }
+    public void sendKey(String xpath, String string) {
+        driver.findElement(By.xpath(xpath)).sendKeys(string);
     }
 }
