@@ -8,7 +8,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-public class JavaJmeter_actualBrowser implements JavaSamplerClient {
+public class JavaJmeter_actualBrowser_UAT_carryOver implements JavaSamplerClient{
     private String username;
     private String password;
     private final String email_field = "//input[contains(@id,'Login_Custom_Web.loginemail')]";
@@ -23,6 +23,12 @@ public class JavaJmeter_actualBrowser implements JavaSamplerClient {
     private final String submitted_closeModal_button = "//button[contains(@class,'mx-name-actionButtonSubmit')]";
     private final String userAccount_icon = "//a[(@class='mx-link mx-name-actionButton3 circlebase usericon_settings')]";
     private final String userAccount_logout_btn = "//a[(@class='mx-link mx-name-actionButton1 usericon_settings_item')]";
+    private static final String export_button = "//button[contains(@class,'mx-name-actionButton1 export')]";
+    private static final String import_button = "(//button[contains(@class,'mx-name-actionButton5')])[2]";
+    private static final String browseFile_button = "//button[@id='15.EcoATM_BidData.PG_BidData_XMLUpload_BidRound.fileManager1_nmj_181-upload']";
+    private static final String fileInput_filed = "//input[@type='file']";
+    private static final String importSubmit_button = "//button[contains(@data-button-id,'BidData_XMLUpload_BidRound')]";
+    private static final String submit_importModal_button = "(//button[text()='Submit Bids'])[2]";
 
     @Override
     public void setupTest(JavaSamplerContext context) {
@@ -48,14 +54,20 @@ public class JavaJmeter_actualBrowser implements JavaSamplerClient {
             driver = new FirefoxDriver();
 
             //Logging In
-            driver.get("https://buy-qa.ecoatmdirect.com/p/login/web");
+            driver.get("https://buy-uat.ecoatmdirect.com/p/login/web");
             Thread.sleep(3000);
             driver.findElement(By.xpath(email_field)).sendKeys(username);
             driver.findElement(By.xpath(email_nextButton)).click();
             Thread.sleep(2000);
             driver.findElement(By.xpath(password_field)).sendKeys(password);
             driver.findElement(By.xpath(login_button)).click();
-            Thread.sleep(3000);
+            Thread.sleep(20000);
+
+            // Export File
+            driver.findElement(By.xpath(export_button)).click();
+            System.out.println("--------  Exported File -------------");
+            Thread.sleep(20000);
+
 
             //Placing Bids Hand-on Table
             for(int i=1; i<7; i++) {
@@ -70,8 +82,28 @@ public class JavaJmeter_actualBrowser implements JavaSamplerClient {
 
             //Submitting Bids
             driver.findElement(By.xpath(submitBid_button)).click();
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             driver.findElement(By.xpath(submitted_closeModal_button)).click();
+
+
+
+            // Import File
+//            System.out.println("--------  Importing File -------------");
+//            driver.findElement(By.xpath(import_button)).click();
+//            String filePath = "C:\\Users\\nadia.boonnayanont\\Downloads\\AA1WHL_2025_Wk28_Round1.xlsx";
+//            File fileToUpload = new File(filePath);
+//            if(!fileToUpload.exists()) {
+//                System.out.println(" File Not Found : " + fileToUpload.getAbsolutePath());
+//            }
+//            driver.findElement(By.xpath(fileInput_filed)).sendKeys(fileToUpload.getAbsolutePath());
+//            Thread.sleep(90000);
+//            System.out.println("----------  Input File --------------");
+//            driver.findElement(By.xpath(importSubmit_button)).click();
+//            Thread.sleep(90000);
+//            System.out.println("----------  Clicked Import File -------");
+//            driver.findElement(By.xpath(submit_importModal_button)).click();
+//            Thread.sleep(90000);
+
 
             //Logging Out
             driver.findElement(By.xpath(userAccount_icon)).click();
